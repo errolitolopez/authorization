@@ -5,6 +5,8 @@ import com.el.authorization.domain.req.role.RoleReq;
 import com.el.authorization.domain.rsp.Paged;
 import com.el.authorization.domain.rsp.role.RoleRsp;
 
+import java.util.List;
+
 public interface RoleService {
     Paged<RoleRsp> query(QueryRoleReq req);
 
@@ -17,4 +19,6 @@ public interface RoleService {
     Integer updateById(RoleReq req);
 
     RoleRsp selectByRoleCode(String roleCode);
+
+    List<RoleRsp> selectRoleListByIds(List<Long> ids);
 }

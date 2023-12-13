@@ -1,6 +1,7 @@
 package com.el.authorization.aspect;
 
 import com.el.authorization.annotation.validation.*;
+import com.el.authorization.constant.ResponseStatusEnum;
 import com.el.authorization.utils.ErrorUtils;
 import com.el.authorization.utils.RegExUtils;
 import org.apache.commons.collections4.CollectionUtils;
@@ -66,7 +67,7 @@ public class ValidateAspect {
                                 if (StringUtils.isNotEmpty(nonNull.message())) {
                                     message = nonNull.message();
                                 }
-                                return ErrorUtils.buildErrorResponse(parameterName, message);
+                                return ErrorUtils.buildErrorResponse(ResponseStatusEnum.VALIDATION_ERROR, parameterName, message);
                             }
                         }
                     }
@@ -140,7 +141,7 @@ public class ValidateAspect {
                     if (errors.size() > 0) {
                         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
                         httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        return ErrorUtils.buildErrorResponse(errors);
+                        return ErrorUtils.buildErrorResponse(ResponseStatusEnum.VALIDATION_ERROR, errors);
                     }
                 }
             } else {

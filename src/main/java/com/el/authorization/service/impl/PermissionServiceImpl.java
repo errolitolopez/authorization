@@ -128,7 +128,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public List<PermissionRsp> selectByPermissionListIds(List<Long> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds)) {
-            return null;
+            return new ArrayList<>();
         }
         TPermissionExample example = new TPermissionExample();
         Criteria criteria = example.createCriteria();

@@ -57,7 +57,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Integer create(RoleReq req) {
-        req.setRoleCode(req.getRoleCode().trim().replaceAll("\\s", "_").toUpperCase());
         TRole tRole = new TRole();
         BeanUtils.copyProperties(req, tRole);
         tRole.setCreatedBy("SYSTEM");
@@ -124,6 +123,25 @@ public class RoleServiceImpl implements RoleService {
             return roleRsp;
         }
         return null;
+    }
+
+    @Override
+    public List<RoleRsp> selectRoleListByIds(List<Long> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return new ArrayList<>();
+        }
+        TRoleExample example = new TRoleExample();
+        Criteria criteria = example.createCriteria();
+        criteria.andIdIn(ids);
+
+        List<TRole> userRoleList = tRoleMapper.selectByExample(example);
+        List<RoleRsp> userRoleRspList = new ArrayList<>();
+        for (TRole tRole : userRoleList) {
+            RoleRsp userRoleRsp = new RoleRsp();
+            BeanUtils.copyProperties(tRole, userRoleRsp);
+            userRoleRspList.add(userRoleRsp);
+        }
+        return userRoleRspList;
     }
 
     private void buildCriteria(QueryRoleReq req, Criteria criteria) {

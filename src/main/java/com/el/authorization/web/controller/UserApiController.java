@@ -2,6 +2,7 @@ package com.el.authorization.web.controller;
 
 import com.el.authorization.annotation.validation.Valid;
 import com.el.authorization.annotation.validation.Validated;
+import com.el.authorization.domain.req.user.ex.AddRoleUserReq;
 import com.el.authorization.domain.req.user.ex.CreateUserReq;
 import com.el.authorization.domain.req.user.ex.UpdatePasswordReq;
 import com.el.authorization.domain.req.user.ex.UpdateUsernameReq;
@@ -39,5 +40,11 @@ public class UserApiController {
     @PostMapping("/update/password")
     public Response<Integer> updatePassword(@Valid @RequestBody UpdatePasswordReq req, HttpServletRequest request, HttpServletResponse response) {
         return userFacade.updatePassword(req);
+    }
+
+    @Validated
+    @PostMapping("/add/role")
+    public Response<Integer> addRoles(@Valid @RequestBody AddRoleUserReq req, HttpServletRequest request, HttpServletResponse response) {
+        return userFacade.addRole(req);
     }
 }

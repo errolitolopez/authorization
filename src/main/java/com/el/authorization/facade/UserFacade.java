@@ -2,6 +2,7 @@ package com.el.authorization.facade;
 
 import com.el.authorization.domain.req.user.QueryUserReq;
 import com.el.authorization.domain.req.user.UserReq;
+import com.el.authorization.domain.req.user.ex.AddRoleUserReq;
 import com.el.authorization.domain.req.user.ex.CreateUserReq;
 import com.el.authorization.domain.req.user.ex.UpdatePasswordReq;
 import com.el.authorization.domain.req.user.ex.UpdateUsernameReq;
@@ -23,4 +24,6 @@ public interface UserFacade {
     Response<Integer> updateUsername(UpdateUsernameReq req);
 
     Response<Integer> updatePassword(UpdatePasswordReq req);
+
+    Response<Integer> addRole(AddRoleUserReq req);
 }

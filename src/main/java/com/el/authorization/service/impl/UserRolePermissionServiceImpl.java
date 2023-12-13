@@ -10,6 +10,8 @@ import com.el.authorization.domain.req.userrolepermission.UserRolePermissionReq;
 import com.el.authorization.domain.rsp.Paged;
 import com.el.authorization.domain.rsp.userrolepermission.UserRolePermissionRsp;
 import com.el.authorization.service.UserRolePermissionService;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -114,6 +116,45 @@ public class UserRolePermissionServiceImpl implements UserRolePermissionService 
         criteria.andPermissionIdEqualTo(id);
 
         return tUserRolePermissionMapper.deleteByExample(example);
+    }
+
+    @Override
+    public List<UserRolePermissionRsp> selectUserRolePermissionListByUserId(Long id) {
+        if (id == null) {
+            return new ArrayList<>();
+        }
+        TUserRolePermissionExample example = new TUserRolePermissionExample();
+        Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(id);
+
+        List<TUserRolePermission> userRolePermissionList = tUserRolePermissionMapper.selectByExample(example);
+        List<UserRolePermissionRsp> userRolePermissionRspList = new ArrayList<>();
+        for (TUserRolePermission tUserRolePermission : userRolePermissionList) {
+            UserRolePermissionRsp userRolePermissionRsp = new UserRolePermissionRsp();
+            BeanUtils.copyProperties(tUserRolePermission, userRolePermissionRsp);
+            userRolePermissionRspList.add(userRolePermissionRsp);
+        }
+        return userRolePermissionRspList;
+    }
+
+    @Override
+    public UserRolePermissionRsp selectUserRolePermissionByUserIdRoleIdAndPermissionId(Long userId, Long roleId, Long permissionId) {
+        if (ObjectUtils.anyNull(userId, roleId, permissionId)) {
+            return null;
+        }
+        TUserRolePermissionExample example = new TUserRolePermissionExample();
+        Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(userId);
+        criteria.andRoleIdEqualTo(roleId);
+        criteria.andPermissionIdEqualTo(permissionId);
+
+        List<TUserRolePermission> userRolePermissionList = tUserRolePermissionMapper.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(userRolePermissionList)) {
+            UserRolePermissionRsp userRolePermissionRsp = new UserRolePermissionRsp();
+            BeanUtils.copyProperties(userRolePermissionList.get(0), userRolePermissionRsp);
+            return userRolePermissionRsp;
+        }
+        return null;
     }
 
     private void buildCriteria(QueryUserRolePermissionReq req, Criteria criteria) {

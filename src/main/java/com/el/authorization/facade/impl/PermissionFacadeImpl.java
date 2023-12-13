@@ -1,5 +1,6 @@
 package com.el.authorization.facade.impl;
 
+import com.el.authorization.constant.ResponseStatusEnum;
 import com.el.authorization.domain.req.permission.PermissionReq;
 import com.el.authorization.domain.req.permission.QueryPermissionReq;
 import com.el.authorization.domain.req.permission.ex.CreatePermissionReq;
@@ -50,11 +51,11 @@ public class PermissionFacadeImpl implements PermissionFacade {
     public Response<Integer> create(CreatePermissionReq req) {
         RoleRsp role = roleService.selectById(req.getRoleId());
         if (Objects.isNull(role)) {
-            return ErrorUtils.buildErrorResponse("roleId", "The field 'roleId' did not find any roles");
+            return ErrorUtils.buildErrorResponse(ResponseStatusEnum.VALIDATION_ERROR,"roleId", "The field 'roleId' did not find any roles");
         }
         String permissionCode = NameUtils.replaceSpaceToUnderScore(role.getRoleCode(), req.getPermissionCode());
         if (Objects.nonNull(permissionService.selectByPermissionCode(permissionCode))) {
-            return ErrorUtils.buildErrorResponse("permissionCode", "The field 'permissionCode' is already exists");
+            return ErrorUtils.buildErrorResponse(ResponseStatusEnum.VALIDATION_ERROR,"permissionCode", "The field 'permissionCode' is already exists");
         }
 
         PermissionReq permissionReq = new PermissionReq();
@@ -96,19 +97,19 @@ public class PermissionFacadeImpl implements PermissionFacade {
     public Response<Integer> updateById(UpdatePermissionReq req) {
         RoleRsp role = roleService.selectById(req.getRoleId());
         if (Objects.isNull(role)) {
-            return ErrorUtils.buildErrorResponse("roleId", "The field 'roleId' did not find any roles");
+            return ErrorUtils.buildErrorResponse(ResponseStatusEnum.VALIDATION_ERROR,"roleId", "The field 'roleId' did not find any roles");
         }
 
         PermissionRsp permission = permissionService.selectById(req.getPermissionId());
         if (Objects.isNull(permission)) {
-            return ErrorUtils.buildErrorResponse("permissionId", "The field 'permissionId' did not find any permissions");
+            return ErrorUtils.buildErrorResponse(ResponseStatusEnum.VALIDATION_ERROR,"permissionId", "The field 'permissionId' did not find any permissions");
         }
         String permissionCode = NameUtils.replaceSpaceToUnderScore(role.getRoleCode(), req.getPermissionCode());
         if (!permission.getPermissionCode().equals(permissionCode)) {
 
             PermissionRsp permissionByPermissionCode = permissionService.selectByPermissionCode(permissionCode);
             if (Objects.nonNull(permissionByPermissionCode)) {
-                return ErrorUtils.buildErrorResponse("permissionCode", "The field 'permissionCode' is already exists");
+                return ErrorUtils.buildErrorResponse(ResponseStatusEnum.VALIDATION_ERROR,"permissionCode", "The field 'permissionCode' is already exists");
             }
 
             PermissionReq permissionReq = new PermissionReq();

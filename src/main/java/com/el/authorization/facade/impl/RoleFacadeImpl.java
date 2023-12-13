@@ -1,5 +1,6 @@
 package com.el.authorization.facade.impl;
 
+import com.el.authorization.constant.ResponseStatusEnum;
 import com.el.authorization.domain.req.permission.PermissionReq;
 import com.el.authorization.domain.req.role.QueryRoleReq;
 import com.el.authorization.domain.req.role.RoleReq;
@@ -56,7 +57,7 @@ public class RoleFacadeImpl implements RoleFacade {
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Response<Integer> create(CreateRoleReq req) {
         if (Objects.nonNull(roleService.selectByRoleCode(req.getRoleCode()))) {
-            return ErrorUtils.buildErrorResponse("roleCode", "The field 'roleCode' is already exists");
+            return ErrorUtils.buildErrorResponse(ResponseStatusEnum.VALIDATION_ERROR,"roleCode", "The field 'roleCode' is already exists");
         }
 
         RoleReq roleReq = new RoleReq();
@@ -124,7 +125,7 @@ public class RoleFacadeImpl implements RoleFacade {
     public Response<Integer> updateById(UpdateRoleReq req) {
         RoleRsp role = roleService.selectById(req.getId());
         if (role == null) {
-            return ErrorUtils.buildErrorResponse("id", "The field 'id' did not find any roles");
+            return ErrorUtils.buildErrorResponse(ResponseStatusEnum.VALIDATION_ERROR,"id", "The field 'id' did not find any roles");
         }
 
         final String currentRoleCode = role.getRoleCode();
@@ -133,7 +134,7 @@ public class RoleFacadeImpl implements RoleFacade {
         RoleReq roleReq = new RoleReq();
         if (!currentRoleCode.equals(newRoleCode)) {
             if (Objects.nonNull(roleService.selectByRoleCode(newRoleCode))) {
-                return ErrorUtils.buildErrorResponse("roleCode", "The field 'roleCode' is already exists");
+                return ErrorUtils.buildErrorResponse(ResponseStatusEnum.VALIDATION_ERROR,"roleCode", "The field 'roleCode' is already exists");
             }
         }
 
